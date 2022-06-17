@@ -1,6 +1,7 @@
 package com.tkroman.kpi.y2022.l1
 import scala.annotation.tailrec
 
+
 sealed trait IntExpr
 case class Lit(x: Int) extends IntExpr
 case class Add(a: IntExpr, b:IntExpr) extends IntExpr
@@ -24,10 +25,23 @@ intExpr match {
   case UnMin(x) => "-"  + toString(x) 
 }
 
+def solveRPN(eqn: String): String = {
+    val items = eqn.split(" ")
+    val accumulator = List[String]()
+    items.foldLeft(accumulator)(foldingFunction).head
+}
+
+def foldingFunction (stack: List[String], a: String): List[String] = stack match {
+  case List() => a :: stack  
+  case List(_) => a :: stack
+  case x::y::ys => a match {
+      case "*" =>  x + "*" + y :: ys
+      case "+" =>  "(" + x + "+" + y + ")"  :: ys
+      case s: String => s :: stack
+  }
+}
+
+
 @main def run(): Unit =
-  println(eval(UnMin(UnMin(Lit(1)))))
-  println(toString(Lit(7)))
-  println(toString(Add(Lit(7), Lit(7))))
-  println(toString(Mul(Lit(7), Add(Lit(7), Lit(7)))))
-  println(toString(Add(Mul(Lit(7), Lit(7)), Mul(Lit(7), Lit(7)))))
-  println(toString(UnMin(Add(Mul(Lit(7), Lit(7)), Mul(Lit(7), Lit(7))))))
+  println(solveRPN("4 2 * 5 + 6 * 7 +"))
+ 
